@@ -16,6 +16,7 @@ exports.postSignUpData = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-      res.redirect("/");
+      res.send(`<p>${err}</p>`);
+      // res.redirect("/");
     });
 };

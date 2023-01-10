@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(signUpRouter);
 
 sequelize
-  .sync({ force: true })
+  .sync()
   .then(() => {
     app.listen(3000);
   })
