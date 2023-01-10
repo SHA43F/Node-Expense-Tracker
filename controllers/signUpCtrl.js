@@ -1,8 +1,9 @@
 const path = require("path");
+const rootDir = require("../util/rootDir");
 const Users = require("../modals/users");
 
 exports.getSignUpData = (req, res, next) => {
-  res.sendFile(path.join(__dirname, "..", "views", "signUp.html"));
+  res.sendFile(path.join(rootDir, "views", "signUp.html"));
 };
 
 exports.postSignUpData = (req, res, next) => {
@@ -12,7 +13,7 @@ exports.postSignUpData = (req, res, next) => {
     password: req.body.password
   })
     .then(() => {
-      res.redirect("/");
+      res.redirect("/signUp");
     })
     .catch((err) => {
       console.log(err);
