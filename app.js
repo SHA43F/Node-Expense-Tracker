@@ -4,6 +4,7 @@ const sequelize = require("./database/sqlDatabase");
 
 const signUpRouter = require("./routes/signUpRouter");
 const signInRouter = require("./routes/signInRouter");
+const expenseRouter = require("./routes/expenseRouter");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(signUpRouter);
 app.use(signInRouter);
+app.use(expenseRouter);
 
 sequelize
   .sync()

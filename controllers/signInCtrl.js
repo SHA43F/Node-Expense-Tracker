@@ -25,7 +25,7 @@ exports.postSignInData = (req, res, next) => {
             res.status(500).send("<h3>Some Error Happened..</h3>");
           }
           if (result) {
-            res.send("<h3>Logged In successfully</h3>");
+            res.redirect("/expense");
           } else {
             res.status(401).send("<h3>Incorrect password.. Try again</h3>");
           }
