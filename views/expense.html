@@ -7,7 +7,7 @@
     <title>Expense Tracker</title>
   </head>
   <body>
-    <form action="/expense" method="POST">
+    <form action="/expense" method="POST" onsubmit="postExpense(event)">
       <div>
         <input
           type="text"
@@ -37,5 +37,63 @@
       </div>
       <button type="submit">Add Expense</button>
     </form>
+    <div id="exampleId"></div>
+    <ul id="expenseItemsId"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", (event) => {
+        event.preventDefault();
+        let innerBlock;
+        const retrievedToken = localStorage.getItem("token");
+        axios
+          .get("http://localhost:3000/expenses", {
+            headers: { Auth: retrievedToken }
+          })
+          .then((response) => {
+            if (response.data.length === 0) {
+              const expenseItems = document.getElementById("expenseItemsId");
+              expenseItems.outerHTML =
+                "<h3>No expense found, Please add one..</h3>";
+            }
+            for (let index in response.data) {
+              displayExpenseItems(response.data[index]);
+            }
+          })
+          .then(() => {
+            axios.get("http://localhost:3000/expense", {
+              headers: { Auth: retrievedToken }
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+      const displayExpenseItems = (expense) => {
+        const retrievedToken = localStorage.getItem("token");
+        const expampleId = document.getElementById("expenseItemsId");
+        innerBlock = `<li>Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount} 
+          <form action="/deleteExpense" method="POST">
+            <input id="expenseInputId" type="hidden" value="${expense.id}" name="expenseId" ></input>
+            <input id="tokenId" type="hidden" value="${retrievedToken}" name="tokenId" ></input>
+            <button type="submit">Delete</button>
+          </form> 
+          </li>`;
+        expampleId.innerHTML = expampleId.innerHTML + innerBlock;
+      };
+
+      const postExpense = (event) => {
+        const retrievedToken = localStorage.getItem("token");
+        event.preventDefault(event);
+        const obj = {
+          description: event.target.description.value,
+          category: event.target.category.value,
+          amount: event.target.amount.value,
+          token: retrievedToken
+        };
+        axios.post("http://localhost:3000/expense", obj).then(() => {
+          window.location.href = "http://localhost:3000/expense";
+        });
+      };
+    </script>
   </body>
 </html>

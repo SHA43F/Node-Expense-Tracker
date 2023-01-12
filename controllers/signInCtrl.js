@@ -1,5 +1,6 @@
 const path = require("path");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const Users = require("../modals/users");
 
 const rootDir = require("../util/rootDir");
@@ -25,7 +26,15 @@ exports.postSignInData = (req, res, next) => {
             res.status(500).send("<h3>Some Error Happened..</h3>");
           }
           if (result) {
-            res.redirect("/expense");
+            const token = jwt.sign(
+              {
+                id: emailExistance.id,
+                userName: emailExistance.userName
+              },
+              "secret-key"
+            );
+            console.log(token);
+            res.json({ token: token });
           } else {
             res.status(401).send("<h3>Incorrect password.. Try again</h3>");
           }

@@ -7,11 +7,11 @@
     <title>Expense Tracker</title>
   </head>
   <body>
-    <form action="/signIn" method="POST">
+    <form action="/signIn" method="POST" onsubmit="signIn(event)">
       <div>
         <input
           type="email"
-          id="nameId"
+          id="emailId"
           name="email"
           placeholder="Enter Email Address"
           required
@@ -20,7 +20,7 @@
       <div>
         <input
           type="password"
-          id="nameId"
+          id="passwordId"
           name="password"
           placeholder="Enter Password"
           required
@@ -29,5 +29,27 @@
       <button type="submit">Sign In</button>
     </form>
     <a href="/signUp">No account? Sign Up here..</a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+    <script>
+      const signIn = (event) => {
+        event.preventDefault(event);
+
+        const obj = {
+          email: event.target.email.value,
+          password: event.target.password.value
+        };
+        axios
+          .post("http://localhost:3000/signIn", obj)
+          .then((response) => {
+            localStorage.setItem("token", response.data.token);
+          })
+          .then(() => {
+            window.location.href = "http://localhost:3000/expense";
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
+    </script>
   </body>
 </html>

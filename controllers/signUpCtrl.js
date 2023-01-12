@@ -17,7 +17,7 @@ exports.postSignUpData = async (req, res, next) => {
         password: hash
       })
         .then(() => {
-          res.redirect("/signUp");
+          res.redirect("/signIn");
         })
         .catch((err) => {
           console.log(err);
