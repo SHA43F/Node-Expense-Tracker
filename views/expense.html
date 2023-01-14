@@ -37,6 +37,8 @@
       </div>
       <button type="submit">Add Expense</button>
     </form>
+    <button id="premiumId">Activate Premium</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <div id="exampleId"></div>
     <ul id="expenseItemsId"></ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
@@ -71,12 +73,12 @@
       const displayExpenseItems = (expense) => {
         const retrievedToken = localStorage.getItem("token");
         const expampleId = document.getElementById("expenseItemsId");
-        innerBlock = `<li>Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount} 
+        innerBlock = `<li>Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount}
           <form action="/deleteExpense" method="POST">
             <input id="expenseInputId" type="hidden" value="${expense.id}" name="expenseId" ></input>
             <input id="tokenId" type="hidden" value="${retrievedToken}" name="tokenId" ></input>
             <button type="submit">Delete</button>
-          </form> 
+          </form>
           </li>`;
         expampleId.innerHTML = expampleId.innerHTML + innerBlock;
       };
@@ -92,6 +94,49 @@
         };
         axios.post("http://localhost:3000/expense", obj).then(() => {
           window.location.href = "http://localhost:3000/expense";
+        });
+      };
+
+      document.getElementById("premiumId").onclick = async function (event) {
+        const token = localStorage.getItem("token");
+        console.log("premium button");
+        const response = await axios.get("http://localhost:3000/premium", {
+          headers: { Auth: token }
+        });
+        console.log("response:", response);
+        var options = {
+          key: response.data.key_id,
+          order_id: response.data.order.id,
+          handler: async function (response) {
+            const res = await axios.post(
+              "http://localhost:3000/updateStatus",
+              {
+                order_id: options.order_id,
+                payment_id: response.razorpay_payment_id
+              },
+              {
+                headers: { Auth: token }
+              }
+            );
+            alert("You are a Premium User Now");
+            document.getElementById("premiumId").style.visibility = "hidden";
+            localStorage.setItem("token", res.data.token);
+          }
+        };
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+        event.preventDefault();
+        rzp1.on("payment.failed", function (response) {
+          console.log(response);
+          const res = axios.post(
+            "http://localhost:3000/updateStatus",
+            {
+              order_id: options.order_id,
+              payment_id: response.razorpay_payment_id
+            },
+            { headers: { Auth: token } }
+          );
+          alert("Payment failed");
         });
       };
     </script>

@@ -8,7 +8,7 @@ exports.getExpenseData = (req, res, next) => {
 };
 
 exports.getExpenses = (req, res, next) => {
-  Expenses.findAll({ where: { userId: req.userId } }).then((expenses) => {
+  Expenses.findAll({ where: { userId: req.user.id } }).then((expenses) => {
     res.json(expenses);
   });
 };
@@ -47,15 +47,4 @@ exports.deleteExpenseItem = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-};
-
-exports.retrieveUserId = (req, res, next) => {
-  try {
-    const token = req.header("Auth");
-    const tokenData = jwt.verify(token, "secret-key");
-    req.userId = tokenData.id;
-    next();
-  } catch (err) {
-    console.log(err);
-  }
 };
