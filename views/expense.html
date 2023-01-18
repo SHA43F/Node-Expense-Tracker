@@ -117,7 +117,7 @@
         console.log("leaderboard response:", response);
         const expampleId = document.getElementById("leaderboard");
         response.data.map((user) => {
-          innerBlock = `<li>Name: ${user.userName} \t Total Expense: ${user.totalExpense}</li>`;
+          innerBlock = `<li>Name: ${user.userName} Total Expense: ${user.totalAmount}</li>`;
           expampleId.innerHTML = expampleId.innerHTML + innerBlock;
         });
       };

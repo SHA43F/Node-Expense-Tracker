@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const rootDir = require("../util/rootDir");
 const Users = require("../modals/users");
 const Expenses = require("../modals/expenses");
-
+const sequelize = require("../database/sqlDatabase");
 exports.getExpenseData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "expense.html"));
 };
@@ -48,34 +48,15 @@ exports.deleteExpenseItem = (req, res, next) => {
 };
 
 exports.getLeaderboard = async (req, res, data) => {
-  const users = await Users.findAll();
-  const userExpense = await users.map(async (user) => {
-    const expenses = await Expenses.findAll({ where: { userId: user.id } });
-    const expensesArray = await expenses.map((exp) => {
-      return exp.amount;
-    });
-    const totalExpenses = expensesArray.reduce((exp, current) => {
-      return exp + current;
-    }, 0);
-    return { userName: user.userName, totalExpense: totalExpenses };
+  const leaderboard = await Users.findAll({
+    attributes: [
+      "id",
+      "userName",
+      [sequelize.fn("sum", sequelize.col("expenses.amount")), "totalAmount"]
+    ],
+    include: [{ model: Expenses, attributes: [] }],
+    group: ["users.id"],
+    order: [["totalAmount", "DESC"]]
   });
-  const leaderboard = await Promise.all(userExpense);
   res.json(leaderboard);
-  // Users.findAll().then((users) => {
-  //   users.map((user) => {
-  //     Expenses.findAll({ where: { userId: user.id } }).then((expenses) => {
-  //       const expensesArray = expenses.map(async (exp) => {
-  //         return exp.amount;
-  //       });
-  //       const totalExpenses = expensesArray.reduce((exp, current) => {
-  //         return exp + current;
-  //       }, 0);
-  //       leaderboard.push({
-  //         userName: user.userName,
-  //         totalExpenses: totalExpenses
-  //       });
-  //     });
-  //   });
-  //   console.log("1111111111111111111", leaderboard);
-  // });
 };
