@@ -9,8 +9,8 @@ function generateAccessToken(id, userName) {
 exports.postOrders = (req, res, next) => {
   try {
     var razor = new RazorPay({
-      key_id: "rzp_test_FmCH4WxxjFY1F4",
-      key_secret: "ZSEk17h8JO8OsEEIhJcpmZ1C"
+      key_id: "rzp_test_441nq6s5KLLsSo",
+      key_secret: "rj26JZ6K5lz1mLupGCNup7a4"
     });
     const amount = 2500;
     razor.orders.create({ amount: amount, currency: "INR" }, (err, order) => {
@@ -23,7 +23,6 @@ exports.postOrders = (req, res, next) => {
           status: "PENDING"
         })
         .then((response) => {
-          console.log("adfsrgfe", response);
           return res.status(201).json({ order, key_id: razor.key_id });
         })
         .catch((err) => {
@@ -37,7 +36,6 @@ exports.postOrders = (req, res, next) => {
 };
 
 exports.updateOrders = async (req, res, next) => {
-  console.log("Update Transaction");
   try {
     const userId = req.user.id;
     const { payment_id, order_id } = req.body;

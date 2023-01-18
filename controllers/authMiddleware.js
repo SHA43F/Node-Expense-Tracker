@@ -7,7 +7,6 @@ exports.retrieveUserId = (req, res, next) => {
     const tokenData = jwt.verify(token, "secret-key");
     Users.findByPk(tokenData.id).then((user) => {
       req.user = user;
-      console.log(user);
       next();
     });
   } catch (err) {

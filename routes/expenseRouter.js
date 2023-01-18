@@ -16,6 +16,6 @@ router.get(
 
 router.post("/deleteExpense", expenseController.deleteExpenseItem);
 
-
+router.get("/leaderboard", expenseController.getLeaderboard);
 
 module.exports = router;

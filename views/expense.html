@@ -35,12 +35,20 @@
           required
         />
       </div>
-      <button type="submit">Add Expense</button>
+      <div>
+        <button type="submit">Add Expense</button>
+      </div>
     </form>
+    <div id="premium">
+      <p>You are a premium user now</p>
+      <button id="leaderboardId">Show Leaderboard</button>
+    </div>
     <button id="premiumId">Activate Premium</button>
+
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <div id="exampleId"></div>
     <ul id="expenseItemsId"></ul>
+    <ul id="leaderboard"></ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
@@ -52,13 +60,18 @@
             headers: { Auth: retrievedToken }
           })
           .then((response) => {
-            if (response.data.length === 0) {
+            if (response.data.isPremiumUser) {
+              document.getElementById("premiumId").outerHTML = "";
+            } else {
+              document.getElementById("premium").outerHTML = "";
+            }
+            if (response.data.expenses.length === 0) {
               const expenseItems = document.getElementById("expenseItemsId");
               expenseItems.outerHTML =
                 "<h3>No expense found, Please add one..</h3>";
             }
-            for (let index in response.data) {
-              displayExpenseItems(response.data[index]);
+            for (let index in response.data.expenses) {
+              displayExpenseItems(response.data.expenses[index]);
             }
           })
           .then(() => {
@@ -97,6 +110,18 @@
         });
       };
 
+      document.getElementById("leaderboardId").onclick = async function (
+        event
+      ) {
+        const response = await axios.get("http://localhost:3000/leaderboard");
+        console.log("leaderboard response:", response);
+        const expampleId = document.getElementById("leaderboard");
+        response.data.map((user) => {
+          innerBlock = `<li>Name: ${user.userName} \t Total Expense: ${user.totalExpense}</li>`;
+          expampleId.innerHTML = expampleId.innerHTML + innerBlock;
+        });
+      };
+
       document.getElementById("premiumId").onclick = async function (event) {
         const token = localStorage.getItem("token");
         console.log("premium button");
@@ -119,7 +144,7 @@
               }
             );
             alert("You are a Premium User Now");
-            document.getElementById("premiumId").style.visibility = "hidden";
+            window.location.href = "http://localhost:3000/expense";
             localStorage.setItem("token", res.data.token);
           }
         };

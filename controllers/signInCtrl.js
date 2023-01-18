@@ -14,7 +14,6 @@ exports.postSignInData = (req, res, next) => {
     email: req.body.email,
     password: req.body.password
   };
-  console.log(signInData);
   Users.findAll().then((users) => {
     const emailExistance = users.find((user) => user.email === req.body.email);
     if (emailExistance) {
@@ -33,7 +32,9 @@ exports.postSignInData = (req, res, next) => {
               },
               "secret-key"
             );
-            console.log(token);
+            if (emailExistance.isPremiumUser === 1) {
+              return res.json({ token: token, isPremiumUser: true });
+            }
             res.json({ token: token });
           } else {
             res.status(401).send("<h3>Incorrect password.. Try again</h3>");
