@@ -9,6 +9,18 @@ exports.getSignInData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "signIn.html"));
 };
 
+exports.getForgotPasswordData = (req, res, next) => {
+  res.sendFile(path.join(rootDir, "views", "forgotPassword.html"));
+};
+
+exports.postForgotData = (req, res, next) => {
+  const obj = {
+    email: req.body.email
+  };
+  console.log(obj);
+  res.redirect("/forgotPassword");
+};
+
 exports.postSignInData = (req, res, next) => {
   const signInData = {
     email: req.body.email,

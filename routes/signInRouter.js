@@ -6,5 +6,8 @@ router.get("/signIn", signInController.getSignInData);
 
 router.post("/signIn", signInController.postSignInData);
 
+router.get("/forgotPassword", signInController.getForgotPasswordData);
+
+router.post("/forgotPasswordCalled", signInController.postForgotData);
 
 module.exports = router;
