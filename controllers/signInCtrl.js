@@ -2,11 +2,15 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Users = require("../modals/users");
+require("dotenv").config();
+const sendGrid = require("@sendgrid/mail");
+sendGrid.setApiKey(process.env.SENDGRID_KEY);
 
 const rootDir = require("../util/rootDir");
 
 exports.getSignInData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "signIn.html"));
+  console.log(process.env.SENDGRID_KEY);
 };
 
 exports.getForgotPasswordData = (req, res, next) => {
@@ -14,11 +18,24 @@ exports.getForgotPasswordData = (req, res, next) => {
 };
 
 exports.postForgotData = (req, res, next) => {
-  const obj = {
-    email: req.body.email
+  const msg = {
+    to: req.body.email,
+    from: "shareefpmk44@gmail.com",
+    subject: "Test Subject",
+    text: "This is test mail.",
+    html: "<strong>and easy to do anywhere, even with Node.js</strong>"
   };
-  console.log(obj);
-  res.redirect("/forgotPassword");
+  sendGrid
+    .send(msg)
+    .then((response) => {
+      console.log(response[0].statusCode);
+      console.log(response[0].headers);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  res.redirect("/signIn");
 };
 
 exports.postSignInData = (req, res, next) => {
