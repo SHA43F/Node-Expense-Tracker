@@ -4,6 +4,7 @@ const rootDir = require("../util/rootDir");
 const Users = require("../modals/users");
 const Expenses = require("../modals/expenses");
 const sequelize = require("../database/sqlDatabase");
+
 exports.getExpenseData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "expense.html"));
 };
