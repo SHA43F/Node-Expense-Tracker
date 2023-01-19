@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input title="daily" type="radio" name="sort" id="dailyId" />
+    <label for="daily">Daily</label>
+    <input title="monthly" type="radio" name="sort" id="monthlyId" checked />
+    <label for="monthly">Monthly</label>
+    <input title="yearly" type="radio" name="sort" id="yearly" />
+    <label for="yearly">Yearly</label>
+    <ul id="expenseItemsId"></ul>
+    <button id="downloadExpensesId">Download Expenses</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", async (event) => {
+        event.preventDefault();
+        let innerBlock;
+        const retrievedToken = localStorage.getItem("token");
+        axios
+          .get("http://localhost:3000/expenses", {
+            headers: { Auth: retrievedToken }
+          })
+          .then((response) => {
+            if (response.data.expenses.length === 0) {
+              const expenseItems = document.getElementById("expenseItemsId");
+              expenseItems.outerHTML =
+                "<h3>No expense found, Please add one..</h3>";
+            }
+            for (let index in response.data.expenses) {
+              displayExpenseItems(response.data.expenses[index]);
+            }
+          })
+          .then(() => {
+            axios.get("http://localhost:3000/expense", {
+              headers: { Auth: retrievedToken }
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        const displayExpenseItems = (expense) => {
+          const retrievedToken = localStorage.getItem("token");
+          const expampleId = document.getElementById("expenseItemsId");
+          const date = new Date(expense.createdAt).toLocaleDateString();
+          innerBlock = `<li>Date: ${date} Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount} - ${expense.incomeExpense}</li>`;
+          expampleId.innerHTML = expampleId.innerHTML + innerBlock;
+        };
+      });
+    </script>
+  </body>
+</html>

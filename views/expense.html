@@ -24,7 +24,27 @@
           <option value="Grocery">Grocery</option>
           <option value="Bills">Bills</option>
           <option value="Fuel">Fuel</option>
+          <option value="Salary">Salary</option>
         </select>
+      </div>
+      <div>
+        <input
+          type="radio"
+          id="incomeId"
+          title="income"
+          name="incomeExpense"
+          value="Income"
+        />
+        <label for="income">Income</label>
+        <input
+          type="radio"
+          id="expenseId"
+          title="expense"
+          name="incomeExpense"
+          value="Expense"
+          checked
+        />
+        <label for="expense">Expense</label>
       </div>
       <div>
         <input
@@ -42,11 +62,11 @@
     <div id="premium">
       <p>You are a premium user now</p>
       <button id="leaderboardId">Show Leaderboard</button>
+      <button id="expenditureId">Monthly Expenditure</button>
     </div>
     <button id="premiumId">Activate Premium</button>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <div id="exampleId"></div>
     <ul id="expenseItemsId"></ul>
     <ul id="leaderboard"></ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
@@ -86,6 +106,7 @@
       const displayExpenseItems = (expense) => {
         const retrievedToken = localStorage.getItem("token");
         const expampleId = document.getElementById("expenseItemsId");
+        const date = new Date(expense.createdAt);
         innerBlock = `<li>Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount}
           <form action="/deleteExpense" method="POST">
             <input id="expenseInputId" type="hidden" value="${expense.id}" name="expenseId" ></input>
@@ -103,8 +124,10 @@
           description: event.target.description.value,
           category: event.target.category.value,
           amount: event.target.amount.value,
-          token: retrievedToken
+          token: retrievedToken,
+          incomeExpense: event.target.incomeExpense.value
         };
+        console.log(obj);
         axios.post("http://localhost:3000/expense", obj).then(() => {
           window.location.href = "http://localhost:3000/expense";
         });
@@ -120,6 +143,13 @@
           innerBlock = `<li>Name: ${user.userName} Total Expense: ${user.totalAmount}</li>`;
           expampleId.innerHTML = expampleId.innerHTML + innerBlock;
         });
+      };
+
+      document.getElementById("expenditureId").onclick = async function (
+        event
+      ) {
+        event.preventDefault();
+        window.location.href = "http://localhost:3000/expenditure";
       };
 
       document.getElementById("premiumId").onclick = async function (event) {

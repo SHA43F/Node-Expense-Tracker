@@ -16,14 +16,15 @@ exports.getExpenses = (req, res, next) => {
 };
 
 exports.postExpenseData = (req, res, next) => {
-  const { description, category, amount, token } = req.body;
+  const { description, category, amount, token, incomeExpense } = req.body;
   const tokenData = jwt.verify(token, "secret-key");
   userId = tokenData.id;
   Expenses.create({
     description,
     category,
     amount,
-    userId
+    userId,
+    incomeExpense
   })
     .then(() => {
       res.redirect("/expense");
@@ -60,4 +61,8 @@ exports.getLeaderboard = async (req, res, data) => {
     order: [["totalAmount", "DESC"]]
   });
   res.json(leaderboard);
+};
+
+exports.expenditure = (req, res, next) => {
+  res.sendFile(path.join(rootDir, "views", "premiumExpense.html"));
 };

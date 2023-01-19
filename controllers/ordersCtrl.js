@@ -9,8 +9,8 @@ function generateAccessToken(id, userName) {
 exports.postOrders = (req, res, next) => {
   try {
     var razor = new RazorPay({
-      key_id: "rzp_test_441nq6s5KLLsSo",
-      key_secret: "rj26JZ6K5lz1mLupGCNup7a4"
+      key_id: "rzp_test_OZYrMhHvVnc7Ll",
+      key_secret: "zzor0DTPxnLoYNA1r84t9CAq"
     });
     const amount = 2500;
     razor.orders.create({ amount: amount, currency: "INR" }, (err, order) => {
