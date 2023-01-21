@@ -1,6 +1,6 @@
 const express = require("express");
 const expenseController = require("../controllers/expenseCtrl");
-const orderController = require("../controllers/ordersCtrl");
+
 const authMiddleware = require("../controllers/authMiddleware");
 const router = express.Router();
 
@@ -15,9 +15,5 @@ router.get(
 );
 
 router.post("/deleteExpense", expenseController.deleteExpenseItem);
-
-router.get("/leaderboard", expenseController.getLeaderboard);
-
-router.get("/expenditure", expenseController.expenditure);
 
 module.exports = router;

@@ -15,6 +15,8 @@
     <label for="yearly">Yearly</label>
     <ul id="expenseItemsId"></ul>
     <button id="downloadExpensesId">Download Expenses</button>
+    <h3>Downloads history:</h3>
+    <ol id="fileDownloadsId"></ol>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", async (event) => {
@@ -31,8 +33,15 @@
               expenseItems.outerHTML =
                 "<h3>No expense found, Please add one..</h3>";
             }
+            if (response.data.fileDownloads.length === 0) {
+              const expenseItems = document.getElementById("fileDownloadsId");
+              expenseItems.outerHTML = "<h3>No downloads..</h3>";
+            }
             for (let index in response.data.expenses) {
               displayExpenseItems(response.data.expenses[index]);
+            }
+            for (let index in response.data.fileDownloads) {
+              displayFileDownloads(response.data.fileDownloads[index]);
             }
           })
           .then(() => {
@@ -43,14 +52,50 @@
           .catch((err) => {
             console.log(err);
           });
-        const displayExpenseItems = (expense) => {
-          const retrievedToken = localStorage.getItem("token");
-          const expampleId = document.getElementById("expenseItemsId");
-          const date = new Date(expense.createdAt).toLocaleDateString();
-          innerBlock = `<li>Date: ${date} Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount} - ${expense.incomeExpense}</li>`;
-          expampleId.innerHTML = expampleId.innerHTML + innerBlock;
-        };
       });
+      const displayExpenseItems = (expense) => {
+        const expampleId = document.getElementById("expenseItemsId");
+        const date = new Date(expense.createdAt).toLocaleDateString();
+        innerBlock = `<li>Date: ${date} Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount} - ${expense.incomeExpense}</li>`;
+        expampleId.innerHTML = expampleId.innerHTML + innerBlock;
+      };
+
+      const displayFileDownloads = (files) => {
+        const expampleId = document.getElementById("fileDownloadsId");
+        const date = new Date(files.createdAt).toLocaleDateString();
+        const time = new Date(files.createdAt).toLocaleTimeString();
+        innerBlock = `<li>Downloaded Date: ${date} - ${time} - <a href="${files.url}">Download File</a></li>`;
+        expampleId.innerHTML = expampleId.innerHTML + innerBlock;
+      };
+
+      document.getElementById("downloadExpensesId").onclick = async () => {
+        event.preventDefault();
+        const retrievedToken = localStorage.getItem("token");
+        try {
+          const response = await axios.get("http://localhost:3000/expenses", {
+            headers: { Auth: retrievedToken }
+          });
+          const expenses = response.data.expenses;
+          axios
+            .post("http://localhost:3000/expenditureDownload", {
+              expenses
+            })
+            .then(async (response) => {
+              var a = document.createElement("a");
+              a.href = response.data.fileUrl;
+              a.click();
+            });
+        } catch (err) {
+          alert("something Error happened", err);
+        }
+      };
+      document.getElementById("downloadExpenses").onclick = async () => {
+        event.preventDefault();
+        const response = await axios.get(
+          "http://localhost:3000/expenditureDownload"
+        );
+        console.log(response);
+      };
     </script>
   </body>
 </html>

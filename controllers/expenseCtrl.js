@@ -1,17 +1,22 @@
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const rootDir = require("../util/rootDir");
-const Users = require("../modals/users");
 const Expenses = require("../modals/expenses");
-const sequelize = require("../database/sqlDatabase");
+const FileDownloads = require("../modals/fileDownloads");
 
 exports.getExpenseData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "expense.html"));
 };
 
-exports.getExpenses = (req, res, next) => {
-  Expenses.findAll({ where: { userId: req.user.id } }).then((expenses) => {
-    res.json({ expenses: expenses, isPremiumUser: req.user.isPremiumUser });
+exports.getExpenses = async (req, res, next) => {
+  const expenses = await Expenses.findAll({ where: { userId: req.user.id } });
+  const fileDownloads = await FileDownloads.findAll({
+    where: { userId: req.user.id }
+  });
+  res.json({
+    expenses: expenses,
+    isPremiumUser: req.user.isPremiumUser,
+    fileDownloads: fileDownloads
   });
 };
 
@@ -47,22 +52,4 @@ exports.deleteExpenseItem = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-};
-
-exports.getLeaderboard = async (req, res, data) => {
-  const leaderboard = await Users.findAll({
-    attributes: [
-      "id",
-      "userName",
-      [sequelize.fn("sum", sequelize.col("expenses.amount")), "totalAmount"]
-    ],
-    include: [{ model: Expenses, attributes: [] }],
-    group: ["users.id"],
-    order: [["totalAmount", "DESC"]]
-  });
-  res.json(leaderboard);
-};
-
-exports.expenditure = (req, res, next) => {
-  res.sendFile(path.join(rootDir, "views", "premiumExpense.html"));
 };

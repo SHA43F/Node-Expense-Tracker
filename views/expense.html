@@ -149,7 +149,16 @@
         event
       ) {
         event.preventDefault();
-        window.location.href = "http://localhost:3000/expenditure";
+        const retrievedToken = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3000/expenses", {
+          headers: { Auth: retrievedToken }
+        });
+
+        if (response.data.isPremiumUser) {
+          window.location.href = "http://localhost:3000/expenditure";
+        } else {
+          window.location.href = "http://localhost:3000/expenditureError";
+        }
       };
 
       document.getElementById("premiumId").onclick = async function (event) {
