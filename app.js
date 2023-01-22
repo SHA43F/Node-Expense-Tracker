@@ -2,7 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sequelize = require("./database/sqlDatabase");
 const cors = require("cors");
-
+const helmet = require("helmet");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 
 const signUpRouter = require("./routes/signUpRouter");
 const signInRouter = require("./routes/signInRouter");
@@ -19,6 +22,16 @@ const FileDownloads = require("./modals/fileDownloads");
 
 const app = express();
 app.use(cors());
+app.use(helmet());
+
+const loggingInfo = fs.createWriteStream(
+  path.join(__dirname, "loggingInfo.log"),
+  {
+    flags: "a"
+  }
+);
+
+app.use(morgan("combined", { stream: loggingInfo }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -44,7 +57,7 @@ Users.hasMany(forgotPassword);
 sequelize
   .sync({ force: false })
   .then(() => {
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   })
   .catch((err) => {
     console.log(err);

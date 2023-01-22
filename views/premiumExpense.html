@@ -17,7 +17,7 @@
     <button id="downloadExpensesId">Download Expenses</button>
     <h3>Downloads history:</h3>
     <ol id="fileDownloadsId"></ol>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", async (event) => {
         event.preventDefault();
@@ -89,12 +89,11 @@
           alert("something Error happened", err);
         }
       };
-      document.getElementById("downloadExpenses").onclick = async () => {
+      document.getElementById("downloadExpenses").onclick = async (event) => {
         event.preventDefault();
         const response = await axios.get(
           "http://localhost:3000/expenditureDownload"
         );
-        console.log(response);
       };
     </script>
   </body>
