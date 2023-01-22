@@ -65,12 +65,21 @@
       <button id="expenditureId">Monthly Expenditure</button>
     </div>
     <button id="premiumId">Activate Premium</button>
-
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <label for="rowsPerPage">Rows per page:</label>
+    <select
+      onchange="setRowsPerPage()"
+      title="rowsPerPage"
+      id="rowsPerPageId"
+      name="rowsPerPage"
+    >
+      <option value="2">2</option>
+      <option value="5">5</option>
+      <option value="10">10</option>
+    </select>
     <ul id="expenseItemsId"></ul>
     <div id="paginationId"></div>
-
     <ul id="leaderboard"></ul>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
@@ -79,6 +88,8 @@
         console.log(page);
         let innerBlock;
         const retrievedToken = localStorage.getItem("token");
+        const rowsValueShow = localStorage.getItem("rowsValue");
+        document.getElementById("rowsPerPageId").value = rowsValueShow;
         axios
           .get("http://localhost:3000/expenses", {
             headers: { Auth: retrievedToken }
@@ -98,15 +109,19 @@
             if (page == null) {
               page = 1;
             }
-            for (let index = 5 * (page - 1); index < page * 5; index += 1) {
-              if(index>=expensesLength){
-                break
+            for (
+              let index = rowsValueShow * (page - 1);
+              index < page * rowsValueShow;
+              index += 1
+            ) {
+              if (index >= expensesLength) {
+                break;
               }
               displayExpenseItems(response.data.expenses[index]);
             }
             for (
               let index = 1;
-              index <= Math.ceil(expensesLength/5);
+              index <= Math.ceil(expensesLength / rowsValueShow);
               index += 1
             ) {
               displaypagination(index);
@@ -124,7 +139,6 @@
       const displayExpenseItems = (expense) => {
         const retrievedToken = localStorage.getItem("token");
         const expampleId = document.getElementById("expenseItemsId");
-        // const date = new Date(expense.createdAt);
         innerBlock = `<li>Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount}
           <form action="/deleteExpense" method="POST">
             <input id="expenseInputId" type="hidden" value="${expense.id}" name="expenseId" ></input>
@@ -139,6 +153,13 @@
         const paginationId = document.getElementById("paginationId");
         innerBlock = `<a href="/expense/?page=${index}">${index}</a>  `;
         paginationId.innerHTML += innerBlock;
+      };
+
+      const setRowsPerPage = () => {
+        const rowsValue = document.getElementById("rowsPerPageId").value;
+        console.log(rowsValue);
+        window.location.href = window.location.href;
+        localStorage.setItem("rowsValue", rowsValue);
       };
 
       const postExpense = (event) => {
