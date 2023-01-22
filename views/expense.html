@@ -68,11 +68,15 @@
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <ul id="expenseItemsId"></ul>
+    <div id="paginationId"></div>
+
     <ul id="leaderboard"></ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
         event.preventDefault();
+        let page = new URLSearchParams(window.location.search).get("page");
+        console.log(page);
         let innerBlock;
         const retrievedToken = localStorage.getItem("token");
         axios
@@ -80,18 +84,32 @@
             headers: { Auth: retrievedToken }
           })
           .then((response) => {
+            const expensesLength = response.data.expenses.length;
             if (response.data.isPremiumUser) {
               document.getElementById("premiumId").outerHTML = "";
             } else {
               document.getElementById("premium").outerHTML = "";
             }
-            if (response.data.expenses.length === 0) {
+            if (expensesLength === 0) {
               const expenseItems = document.getElementById("expenseItemsId");
               expenseItems.outerHTML =
                 "<h3>No expense found, Please add one..</h3>";
             }
-            for (let index in response.data.expenses) {
+            if (page == null) {
+              page = 1;
+            }
+            for (let index = 5 * (page - 1); index < page * 5; index += 1) {
+              if(index>=expensesLength){
+                break
+              }
               displayExpenseItems(response.data.expenses[index]);
+            }
+            for (
+              let index = 1;
+              index <= Math.ceil(expensesLength/5);
+              index += 1
+            ) {
+              displaypagination(index);
             }
           })
           .then(() => {
@@ -106,7 +124,7 @@
       const displayExpenseItems = (expense) => {
         const retrievedToken = localStorage.getItem("token");
         const expampleId = document.getElementById("expenseItemsId");
-        const date = new Date(expense.createdAt);
+        // const date = new Date(expense.createdAt);
         innerBlock = `<li>Description: ${expense.description} Category: ${expense.category} amount: ${expense.amount}
           <form action="/deleteExpense" method="POST">
             <input id="expenseInputId" type="hidden" value="${expense.id}" name="expenseId" ></input>
@@ -114,7 +132,13 @@
             <button type="submit">Delete</button>
           </form>
           </li>`;
-        expampleId.innerHTML = expampleId.innerHTML + innerBlock;
+        expampleId.innerHTML += innerBlock;
+      };
+
+      const displaypagination = (index) => {
+        const paginationId = document.getElementById("paginationId");
+        innerBlock = `<a href="/expense/?page=${index}">${index}</a>  `;
+        paginationId.innerHTML += innerBlock;
       };
 
       const postExpense = (event) => {
@@ -137,7 +161,6 @@
         event
       ) {
         const response = await axios.get("http://localhost:3000/leaderboard");
-        console.log("leaderboard response:", response);
         const expampleId = document.getElementById("leaderboard");
         response.data.map((user) => {
           innerBlock = `<li>Name: ${user.userName} Total Expense: ${user.totalAmount}</li>`;

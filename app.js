@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sequelize = require("./database/sqlDatabase");
 const cors = require("cors");
-require("dotenv").config();
+
 
 const signUpRouter = require("./routes/signUpRouter");
 const signInRouter = require("./routes/signInRouter");

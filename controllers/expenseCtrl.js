@@ -4,12 +4,16 @@ const rootDir = require("../util/rootDir");
 const Expenses = require("../modals/expenses");
 const FileDownloads = require("../modals/fileDownloads");
 
+const Expenses_Per_Page = 5;
+
 exports.getExpenseData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "expense.html"));
 };
 
 exports.getExpenses = async (req, res, next) => {
-  const expenses = await Expenses.findAll({ where: { userId: req.user.id } });
+  const expenses = await Expenses.findAll({
+    where: { userId: req.user.id }
+  });
   const fileDownloads = await FileDownloads.findAll({
     where: { userId: req.user.id }
   });
