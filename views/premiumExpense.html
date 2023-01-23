@@ -5,19 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      button {
+        color: #fff;
+        background-color: rgb(204, 169, 12);
+        border-color: transparent;
+        padding: 10px 15px;
+        display: inline-block;
+        border-radius: 5px;
+        margin: 5px;
+      }
+      button:hover {
+        background-color: rgb(204, 102, 12);
+      }
+      a {
+        color: #fff;
+        text-decoration: none;
+        background-color: rgb(204, 169, 12);
+        border-color: transparent;
+        padding: 10px 15px;
+        display: inline-block;
+        border-radius: 5px;
+        margin: 5px;
+      }
+      a:hover {
+        background-color: rgb(204, 102, 12);
+      }
+      input {
+        border-color: transparent;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 3px;
+      }
+      ul,
+      ol {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        border-width: 3px;
+        background-color: #fde8e8;
+        padding: 15px;
+        border-radius: 20px;
+      }
+      li {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+      }
+    </style>
   </head>
   <body>
-    <input title="daily" type="radio" name="sort" id="dailyId" />
-    <label for="daily">Daily</label>
-    <input title="monthly" type="radio" name="sort" id="monthlyId" checked />
-    <label for="monthly">Monthly</label>
-    <input title="yearly" type="radio" name="sort" id="yearly" />
-    <label for="yearly">Yearly</label>
     <ul id="expenseItemsId"></ul>
     <button id="downloadExpensesId">Download Expenses</button>
     <h3>Downloads history:</h3>
     <ol id="fileDownloadsId"></ol>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", async (event) => {
         event.preventDefault();

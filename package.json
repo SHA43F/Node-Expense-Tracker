@@ -34,6 +34,7 @@
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
+    "openssl": "^2.0.0",
     "razorpay": "^2.8.4",
     "sequelize": "^6.28.0",
     "uuid": "^9.0.0"

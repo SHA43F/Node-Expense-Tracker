@@ -5,15 +5,15 @@ const Users = require("../modals/users");
 
 const rootDir = require("../util/rootDir");
 
+exports.getIndex = (req, res, next) => {
+  res.sendFile(path.join(rootDir, "views", "index.html"));
+};
+
 exports.getSignInData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "signIn.html"));
 };
 
 exports.postSignInData = (req, res, next) => {
-  const signInData = {
-    email: req.body.email,
-    password: req.body.password
-  };
   Users.findAll().then((users) => {
     const emailExistance = users.find((user) => user.email === req.body.email);
     if (emailExistance) {

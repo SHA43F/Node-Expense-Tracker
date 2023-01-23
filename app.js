@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sequelize = require("./database/sqlDatabase");
 const cors = require("cors");
-const helmet = require("helmet");
+// const helmet = require("helmet");
 const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
@@ -22,7 +22,7 @@ const FileDownloads = require("./modals/fileDownloads");
 
 const app = express();
 app.use(cors());
-app.use(helmet());
+// app.use(helmet());
 
 const loggingInfo = fs.createWriteStream(
   path.join(__dirname, "loggingInfo.log"),

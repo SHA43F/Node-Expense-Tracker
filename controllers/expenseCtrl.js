@@ -4,8 +4,6 @@ const rootDir = require("../util/rootDir");
 const Expenses = require("../modals/expenses");
 const FileDownloads = require("../modals/fileDownloads");
 
-const Expenses_Per_Page = 5;
-
 exports.getExpenseData = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "expense.html"));
 };

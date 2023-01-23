@@ -1,7 +1,8 @@
 const AWS = require("aws-sdk");
+const dotenv = require("dotenv");
+dotenv.config();
 
 exports.uploadToS3 = (data, filename) => {
-
   const s3Bucket = new AWS.S3({
     accessKeyId: process.env.IAM_USER_KEY,
     secretAccessKey: process.env.ACCESS_SECRET_KEY

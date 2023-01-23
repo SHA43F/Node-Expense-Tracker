@@ -5,9 +5,70 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Tracker</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .signIn {
+        margin-top: 2vh;
+        width: 95%;
+        max-width: 25rem;
+        border-radius: 6px;
+        padding: 1rem;
+        text-align: center;
+        background-color: lightblue;
+      }
+      button {
+        color: #fff;
+        background-color: rgb(204, 169, 12);
+        border-color: transparent;
+        padding: 10px 15px;
+        display: inline-block;
+        border-radius: 5px;
+        margin: 5px;
+      }
+      button:hover {
+        background-color: rgb(204, 102, 12);
+      }
+      a {
+        text-decoration: none;
+        padding: 10px;
+        color: black;
+      }
+      a:hover {
+        color: rgb(232, 56, 56);
+      }
+      input {
+        border-color: transparent;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 3px;
+      }
+      ul {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        border-width: 3px;
+        background-color: #fde8e8;
+        padding: 15px;
+        border-radius: 20px;
+      }
+      li {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+      }
+    </style>
   </head>
   <body>
-    <form action="/expense" method="POST" onsubmit="postExpense(event)">
+    <form
+      action="/expense"
+      method="POST"
+      onsubmit="postExpense(event)"
+      class="signIn"
+    >
       <div>
         <input
           type="text"
@@ -65,22 +126,25 @@
       <button id="expenditureId">Monthly Expenditure</button>
     </div>
     <button id="premiumId">Activate Premium</button>
-    <label for="rowsPerPage">Rows per page:</label>
-    <select
-      onchange="setRowsPerPage()"
-      title="rowsPerPage"
-      id="rowsPerPageId"
-      name="rowsPerPage"
-    >
-      <option value="2">2</option>
-      <option value="5">5</option>
-      <option value="10">10</option>
-    </select>
+    <div>
+      <label for="rowsPerPage">Rows per page:</label>
+      <select
+        onchange="setRowsPerPage()"
+        title="rowsPerPage"
+        id="rowsPerPageId"
+        name="rowsPerPage"
+      >
+        <option value="2">2</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+
     <ul id="expenseItemsId"></ul>
     <div id="paginationId"></div>
     <ul id="leaderboard"></ul>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
         event.preventDefault();
