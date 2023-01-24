@@ -90,6 +90,7 @@
           .post("http://13.235.247.253:3000/signIn", obj)
           .then((response) => {
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("rowsValue", 5);
           })
           .then(() => {
             window.location.href = "http://13.235.247.253:3000/expense";
