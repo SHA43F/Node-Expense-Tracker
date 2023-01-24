@@ -44,6 +44,8 @@ app.use(purchaseRouter);
 app.use(forgotPasswordRouter);
 app.use(premiumFeatureRouter);
 
+console.log("Jenkins Check");
+
 Users.hasMany(Expenses);
 Expenses.belongsTo(Users);
 
