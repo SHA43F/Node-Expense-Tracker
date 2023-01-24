@@ -154,7 +154,7 @@
         const rowsValueShow = localStorage.getItem("rowsValue");
         document.getElementById("rowsPerPageId").value = rowsValueShow;
         axios
-          .get("http://localhost:3000/expenses", {
+          .get("http://13.235.247.253:3000/expenses", {
             headers: { Auth: retrievedToken }
           })
           .then((response) => {
@@ -191,7 +191,7 @@
             }
           })
           .then(() => {
-            axios.get("http://localhost:3000/expense", {
+            axios.get("http://13.235.247.253:3000/expense", {
               headers: { Auth: retrievedToken }
             });
           })
@@ -236,15 +236,15 @@
           incomeExpense: event.target.incomeExpense.value
         };
         console.log(obj);
-        axios.post("http://localhost:3000/expense", obj).then(() => {
-          window.location.href = "http://localhost:3000/expense";
+        axios.post("http://13.235.247.253:3000/expense", obj).then(() => {
+          window.location.href = "http://13.235.247.253:3000/expense";
         });
       };
 
       document.getElementById("leaderboardId").onclick = async function (
         event
       ) {
-        const response = await axios.get("http://localhost:3000/leaderboard");
+        const response = await axios.get("http://13.235.247.253:3000/leaderboard");
         const expampleId = document.getElementById("leaderboard");
         response.data.map((user) => {
           innerBlock = `<li>Name: ${user.userName} Total Expense: ${user.totalAmount}</li>`;
@@ -257,21 +257,21 @@
       ) {
         event.preventDefault();
         const retrievedToken = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3000/expenses", {
+        const response = await axios.get("http://13.235.247.253:3000/expenses", {
           headers: { Auth: retrievedToken }
         });
 
         if (response.data.isPremiumUser) {
-          window.location.href = "http://localhost:3000/expenditure";
+          window.location.href = "http://13.235.247.253:3000/expenditure";
         } else {
-          window.location.href = "http://localhost:3000/expenditureError";
+          window.location.href = "http://13.235.247.253:3000/expenditureError";
         }
       };
 
       document.getElementById("premiumId").onclick = async function (event) {
         const token = localStorage.getItem("token");
         console.log("premium button");
-        const response = await axios.get("http://localhost:3000/premium", {
+        const response = await axios.get("http://13.235.247.253:3000/premium", {
           headers: { Auth: token }
         });
         console.log("response:", response);
@@ -280,7 +280,7 @@
           order_id: response.data.order.id,
           handler: async function (response) {
             const res = await axios.post(
-              "http://localhost:3000/updateStatus",
+              "http://13.235.247.253:3000/updateStatus",
               {
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id
@@ -290,7 +290,7 @@
               }
             );
             alert("You are a Premium User Now");
-            window.location.href = "http://localhost:3000/expense";
+            window.location.href = "http://13.235.247.253:3000/expense";
             localStorage.setItem("token", res.data.token);
           }
         };
@@ -300,7 +300,7 @@
         rzp1.on("payment.failed", function (response) {
           console.log(response);
           const res = axios.post(
-            "http://localhost:3000/updateStatus",
+            "http://13.235.247.253:3000/updateStatus",
             {
               order_id: options.order_id,
               payment_id: response.razorpay_payment_id

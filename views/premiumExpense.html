@@ -71,7 +71,7 @@
         let innerBlock;
         const retrievedToken = localStorage.getItem("token");
         axios
-          .get("http://localhost:3000/expenses", {
+          .get("http://13.235.247.253:3000/expenses", {
             headers: { Auth: retrievedToken }
           })
           .then((response) => {
@@ -92,7 +92,7 @@
             }
           })
           .then(() => {
-            axios.get("http://localhost:3000/expense", {
+            axios.get("http://13.235.247.253:3000/expense", {
               headers: { Auth: retrievedToken }
             });
           })
@@ -119,12 +119,12 @@
         event.preventDefault();
         const retrievedToken = localStorage.getItem("token");
         try {
-          const response = await axios.get("http://localhost:3000/expenses", {
+          const response = await axios.get("http://13.235.247.253:3000/expenses", {
             headers: { Auth: retrievedToken }
           });
           const expenses = response.data.expenses;
           axios
-            .post("http://localhost:3000/expenditureDownload", {
+            .post("http://13.235.247.253:3000/expenditureDownload", {
               expenses
             })
             .then(async (response) => {
@@ -139,7 +139,7 @@
       document.getElementById("downloadExpenses").onclick = async (event) => {
         event.preventDefault();
         const response = await axios.get(
-          "http://localhost:3000/expenditureDownload"
+          "http://13.235.247.253:3000/expenditureDownload"
         );
       };
     </script>

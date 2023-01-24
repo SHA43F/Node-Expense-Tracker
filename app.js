@@ -3,9 +3,9 @@ const bodyParser = require("body-parser");
 const sequelize = require("./database/sqlDatabase");
 const cors = require("cors");
 // const helmet = require("helmet");
-const morgan = require("morgan");
-const fs = require("fs");
-const path = require("path");
+// const morgan = require("morgan");
+// const fs = require("fs");
+// const path = require("path");
 
 const signUpRouter = require("./routes/signUpRouter");
 const signInRouter = require("./routes/signInRouter");
@@ -24,14 +24,14 @@ const app = express();
 app.use(cors());
 // app.use(helmet());
 
-const loggingInfo = fs.createWriteStream(
-  path.join(__dirname, "loggingInfo.log"),
-  {
-    flags: "a"
-  }
-);
+// const loggingInfo = fs.createWriteStream(
+//   path.join(__dirname, "loggingInfo.log"),
+//   {
+//     flags: "a"
+//   }
+// );
 
-app.use(morgan("combined", { stream: loggingInfo }));
+// app.use(morgan("combined", { stream: loggingInfo }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 

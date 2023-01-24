@@ -87,12 +87,12 @@
           password: event.target.password.value
         };
         axios
-          .post("http://localhost:3000/signIn", obj)
+          .post("http://13.235.247.253:3000/signIn", obj)
           .then((response) => {
             localStorage.setItem("token", response.data.token);
           })
           .then(() => {
-            window.location.href = "http://localhost:3000/expense";
+            window.location.href = "http://13.235.247.253:3000/expense";
           })
           .catch((err) => {
             console.log(err);
